@@ -1,7 +1,14 @@
+import Canvas from './components/Canvas';
+import SettingBar from './components/SettingBar';
+import ToolBar from './components/ToolBar';
+import './styles/app.scss';
+
 const App = () => {
   return (
-    <div className="App">
-      App
+    <div className="app">
+      <ToolBar />
+      <SettingBar />
+      <Canvas />
     </div>
   );
 }
