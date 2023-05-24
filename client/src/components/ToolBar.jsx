@@ -1,49 +1,44 @@
 import React from 'react';
-import '../styles/toolbar.scss';
-import toolState from '../store/toolState';
-import canvasState from '../store/canvasState';
-import Brush from '../tools/Brush';
-import Rect from '../tools/Rect';
-import Line from '../tools/Line';
-import Eraser from '../tools/Eraser';
-import Circle from '../tools/Circle';
+import '../styles/toolbar.scss'
+import toolState from "../store/toolState";
+import Brush from "../tools/Brush";
+import canvasState from "../store/canvasState";
+import Rect from "../tools/Rect";
+import Line from "../tools/Line";
+import Circle from "../tools/Circle";
+import Eraser from "../tools/Eraser";
 
-const ToolBar = () => {
+const Toolbar = () => {
+
     const changeColor = e => {
         toolState.setStrokeColor(e.target.value)
         toolState.setFillColor(e.target.value)
     }
 
-    return (
-        <div className='toolbar'>
-            <button 
-                className='toolbar__btn brush'
-                onClick={() => toolState.setTool(new Brush(canvasState.canvas))}
-            ></button>
-            <button 
-                className='toolbar__btn rect'
-                onClick={() => toolState.setTool(new Rect(canvasState.canvas))}
-            ></button>
-            <button 
-                className='toolbar__btn circle'
-                onClick={() => toolState.setTool(new Circle(canvasState.canvas))}
-            ></button>
-            <button className='toolbar__btn eraser'
-                onClick={() => toolState.setTool(new Eraser(canvasState.canvas))}
-            ></button>
-            <button className='toolbar__btn line'
-                onClick={() => toolState.setTool(new Line(canvasState.canvas))}
-            ></button>
-            <input 
-                type='color' style={{marginLeft: 10}} 
-                onChange={e => changeColor(e)} 
-            />
+    const download = () => {
+        const dataUrl = canvasState.canvas.toDataURL()
+        console.log(dataUrl)
+        const a = document.createElement('a')
+        a.href = dataUrl
+        a.download = canvasState.sessionid + ".jpg"
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+    }
 
-            <button className='toolbar__btn undo' onClick={() => canvasState.undo()}></button>
-            <button className='toolbar__btn redo' onClick={() => canvasState.redo()}></button>
-            <button className='toolbar__btn save'></button>
+    return (
+        <div className="toolbar">
+            <button className="toolbar__btn brush" onClick={() => toolState.setTool(new Brush(canvasState.canvas, canvasState.socket, canvasState.sessionid))}/>
+            <button className="toolbar__btn rect" onClick={() => toolState.setTool(new Rect(canvasState.canvas, canvasState.socket, canvasState.sessionid))}/>
+            <button className="toolbar__btn circle" onClick={() => toolState.setTool(new Circle(canvasState.canvas))}/>
+            <button className="toolbar__btn eraser" onClick={() => toolState.setTool(new Eraser(canvasState.canvas))}/>
+            <button className="toolbar__btn line" onClick={() => toolState.setTool(new Line(canvasState.canvas))}/>
+            <input onChange={e => changeColor(e)} style={{marginLeft:10}} type="color"/>
+            <button className="toolbar__btn undo" onClick={() => canvasState.undo()}/>
+            <button className="toolbar__btn redo" onClick={() => canvasState.redo()}/>
+            <button className="toolbar__btn save" onClick={() => download()}/>
         </div>
     );
 };
 
-export default ToolBar;
+export default Toolbar;
